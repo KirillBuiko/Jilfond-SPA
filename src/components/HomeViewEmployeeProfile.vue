@@ -10,7 +10,8 @@ const selectedEmployee = computed(() => employees.employeesList.get(employees.se
 
 <template>
   <div class="employee-profile-wrapper">
-    <div class="placeholder" v-if="selectedEmployee === undefined">Выберите сотрудника, чтобы посмотреть его профиль</div>
+    <div class="placeholder" v-if="selectedEmployee === undefined">Выберите сотрудника, чтобы посмотреть его профиль
+    </div>
     <div class="employee-profile" v-else>
       <div class="employee-photo">
         <PlaceholderImage/>
@@ -31,8 +32,7 @@ const selectedEmployee = computed(() => employees.employeesList.get(employees.se
             incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
             laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
             esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-            qui
-            officia deserunt mollit anim id est laborum.
+            qui officia deserunt mollit anim id est laborum.
           </div>
         </div>
       </div>
@@ -70,6 +70,8 @@ const selectedEmployee = computed(() => employees.employeesList.get(employees.se
     flex: 1 0;
 
     .employee-info-wrapper {
+      overflow: auto;
+
       h1 {
         color: #000;
         font-size: 16px;
@@ -96,7 +98,7 @@ const selectedEmployee = computed(() => employees.employeesList.get(employees.se
         margin-bottom: 25px;
       }
 
-      .about h1{
+      .about h1 {
         margin-bottom: 25px;
       }
     }

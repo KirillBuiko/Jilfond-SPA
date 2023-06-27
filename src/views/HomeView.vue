@@ -1,10 +1,6 @@
 <script setup>
 import HomeViewHeader from "@/components/HomeViewHeader.vue";
 import HomeViewMain from "@/components/HomeViewMain.vue";
-import {useStore} from "vuex";
-
-const store = useStore();
-store.dispatch('employees/getAllEmployees');
 </script>
 
 <template>

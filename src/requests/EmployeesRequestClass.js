@@ -5,7 +5,7 @@ export class EmployeesRequestClass extends RequestClass{
         return this.makeRequest("https://jsonplaceholder.typicode.com/users");
     }
 
-    async getEmployee(ID) {
-        return this.makeRequest(`https://jsonplaceholder.typicode.com/users/${ID}`);
+    async getEmployee(id) {
+        return this.makeRequest(`https://jsonplaceholder.typicode.com/users/${id}`);
     }
 }

@@ -1,5 +1,5 @@
 import {EmployeesRequestClass} from "@/requests/EmployeesRequestClass";
-
+import stringSimilarity from 'string-similarity'
 const employeeRequests = new EmployeesRequestClass();
 
 const state = {
@@ -9,26 +9,49 @@ const state = {
 }
 
 const getters = {
-    findEmployee: (state) => (nameOrID) => {
-        return state.employeesList.get(nameOrID) ?? "";
-    }
 }
 
 const actions = {
     getAllEmployees: async ({state, commit}) => {
-        console.log("loading start");
         if (state.isLoading) return;
         commit('setLoading', true);
         try {
             const resp = await employeeRequests.getAllEmployees();
-            console.log(resp);
             commit('addEmployees', resp.data);
         } catch (e) {
-            // some error handle
-            console.log(e);
+            commit('setLoading', false);
+            throw(e);
         }
         commit('setLoading', false);
-        console.log("loading stop");
+    },
+    findEmployee: ({state}, namesOrIDs) => {
+        if(!namesOrIDs || (typeof namesOrIDs !== "string")) return [];
+        const resultArray = [];
+        // split
+        const searchArray = namesOrIDs.toLowerCase().split(',');
+        // iterate all
+        for (let i = 0; i < searchArray.length; i++) {
+            // check if id
+            const item = searchArray[i].trim();
+            let id = parseInt(item);
+            if(!isNaN(id)){
+                if(state.employeesList.has(id)) resultArray.push(id);
+            }
+            else {
+                let maxSimilarity = 0;
+                let bestID = "";
+                // find the most similar name
+                state.employeesList.forEach((value, key) => {
+                    const similarity = stringSimilarity.compareTwoStrings(value.name.toLowerCase(), item);
+                    if(similarity > maxSimilarity){
+                        maxSimilarity = similarity;
+                        bestID = key;
+                    }
+                });
+                if (bestID !== "") resultArray.push(bestID);
+            }
+        }
+        return resultArray;
     }
 }
 
@@ -42,9 +65,9 @@ const mutations = {
             state.employeesList.set(e["id"], e);
         })
     },
-    selectEmployee(state, ID) {
-        if(state.employeesList.has(ID))
-            state.selectedEmployeeID = ID;
+    selectEmployee(state, id) {
+        if(state.employeesList.has(id))
+            state.selectedEmployeeID = id;
     }
 }
 

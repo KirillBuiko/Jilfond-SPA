@@ -1,28 +1,45 @@
 <script setup>
 import ControlInput from "@/components/controls/ControlInput.vue";
-import {ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useStore} from "vuex";
 import ComponentPreloader from "@/components/generals/ComponentPreloader.vue";
 import EmployeeListItem from "@/components/EmployeeListItem.vue";
 
-const inputText = ref("");
+const searchText = ref("");
+const searchResultArray = ref(undefined);
+const isRequestError = ref(false);
 const store = useStore();
 const {employees} = store.state;
 const timerDelay = 500;
 let timerID = -1;
 
-function loadAndSearch() {
-  store.commit('employees/setLoading', true);
-  setTimeout(() => store.commit('employees/setLoading', false), 5000);
+const placeholderText = computed(() => {
+  if (employees.isLoading) return "";
+  else if (isRequestError.value) return "Произошла ошибка запроса";
+  else if (searchResultArray.value === undefined) return "Здесь будет результат";
+  else if (searchResultArray.value.length === 0) return "Ничего не найдено";
+  return "";
+})
+
+async function loadAndSearch() {
+  try {
+    searchResultArray.value = [];
+    await store.dispatch("employees/getAllEmployees");
+    searchResultArray.value = await store.dispatch('employees/findEmployee', searchText.value);
+    isRequestError.value = false;
+  } catch (e) {
+    isRequestError.value = true;
+  }
 }
 
-function onUpdate() {
+watch(searchText, (v, ov) => {
   if (timerID !== -1) clearTimeout(timerID);
-  timerID = setTimeout(loadAndSearch, timerDelay);
-}
+  if(v.trim() === "") searchResultArray.value = [];
+  else if(v.trim() !== ov.trim()) timerID = setTimeout(loadAndSearch, timerDelay);
+});
 
-function onItemClick(ID) {
-  store.commit('employees/selectEmployee', ID);
+function onItemClick(id) {
+  store.commit('employees/selectEmployee', id);
 }
 </script>
 
@@ -32,19 +49,22 @@ function onItemClick(ID) {
     <ControlInput class="search-input"
                   input-type="text"
                   placeholder="Введите имя или ID"
-                  :model-value="inputText"
-                  @update:model-value="onUpdate"/>
+                  v-model="searchText"/>
     <h1 class="result-label">Результаты</h1>
     <div class="search-result">
       <ComponentPreloader :is-loading="employees.isLoading"/>
-      <div class="placeholder" v-if="employees.employeesList.size === 0">Здесь будет результат</div>
       <div class="search-result-list">
+        <div class="placeholder"
+             :class="{error: isRequestError}"
+             v-if="placeholderText !== ''">
+          {{ placeholderText }}
+        </div>
         <EmployeeListItem class="search-result-item"
-                          v-for="[key, value] in employees.employeesList"
-                          :key="key"
-                          :info="value"
-                          :is-selected="employees.selectedEmployeeID === key"
-                          @click="onItemClick(key)"/>
+                          v-for="id in searchResultArray"
+                          :key="id"
+                          :info="employees.employeesList.get(id)"
+                          :is-selected="employees.selectedEmployeeID === id"
+                          @click="onItemClick(id)"/>
       </div>
     </div>
   </aside>
@@ -107,6 +127,7 @@ aside {
         margin-bottom: 18px;
         flex: 0 0 auto;
         width: $aside-width - $left-padding - $right-padding;
+
         &:first-child {
           margin-top: 8px;
         }
@@ -117,7 +138,10 @@ aside {
   .placeholder {
     color: #76787D;
     font-size: 14px;
-    margin-top: 10px;
+
+    &.error {
+      color: indianred;
+    }
   }
 }
 </style>
