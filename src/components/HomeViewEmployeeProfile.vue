@@ -15,8 +15,9 @@
 .employee-profile-wrapper {
   display: flex;
   flex-direction: row;
-  flex: 1 0;
+  flex: 1 0 0;
   background: #FFF;
+  width: 100%;
   border-left: 1px solid #E0E0E0;
 
   .placeholder {

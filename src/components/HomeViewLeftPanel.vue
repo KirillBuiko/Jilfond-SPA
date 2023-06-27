@@ -13,70 +13,94 @@ let timerID = -1;
 
 function loadAndSearch() {
   commit('employees/setLoading', true);
-  setTimeout(()=>commit('employees/setLoading', false), 5000);
+  setTimeout(() => commit('employees/setLoading', false), 5000);
 }
 
 function onUpdate() {
-  if(timerID !== -1) clearTimeout(timerID);
+  if (timerID !== -1) clearTimeout(timerID);
   timerID = setTimeout(loadAndSearch, timerDelay);
 }
 </script>
 
 <template>
   <aside>
-    <h1>Поиск сотрудников</h1>
+    <h1 class="search-label">Поиск сотрудников</h1>
     <ControlInput class="search-input"
                   input-type="text"
                   placeholder="Введите имя или ID"
                   :model-value="inputText"
                   @update:model-value="onUpdate"/>
-    <h1>Результаты</h1>
+    <h1 class="result-label">Результаты</h1>
     <div class="search-result">
       <ComponentPreloader :is-loading="employees.isLoading"/>
       <div class="placeholder" v-if="employees.employeesList.size === 0">Здесь будет результат</div>
       <div class="search-result-list">
-        <EmployeeListItem v-for="[key, value] in employees.employeesList" :key="key" :info="value"/>
+        <EmployeeListItem class="search-result-item"
+                          v-for="[key, value] in employees.employeesList"
+                          :key="key"
+                          :info="value"/>
       </div>
     </div>
   </aside>
 </template>
 
 <style scoped lang="scss">
+$left-padding: 20px;
+$right-padding: 31px;
+$aside-width: 290px;
+
 aside {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  flex: 0 0 290px;
-  padding: 27px 31px 20px 20px;
+  flex: 0 0 $aside-width;
+  padding: 27px 0 20px 0;
+  overflow: hidden;
+
+  & > *:not(.search-result) {
+    margin-right: $right-padding;
+    margin-left: $left-padding;
+  }
 
   h1 {
     color: #333;
     font-size: 1rem;
     font-weight: 600;
     line-height: 140%;
-  }
 
-  .search-input {
-    margin: 22px 0;
+    &.search-label {
+      margin-bottom: 14px;
+    }
+
+    &.result-label {
+      margin-top: 29px;
+      margin-bottom: 10px;
+    }
   }
 
   .search-result {
     position: relative;
     display: flex;
+    align-items: stretch;
     flex-direction: column;
     flex: 1 0;
     border-radius: 15px;
-    margin: 10px -31px -20px -20px;
     overflow: hidden;
 
     .search-result-list {
-      padding: 0 31px 0 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-left: $left-padding;
       height: 100%;
       width: 100%;
       overflow: auto;
+      scrollbar-gutter: stable;
 
-      & > * {
+      .search-result-item {
         margin-bottom: 18px;
+        width: $aside-width - $left-padding - $right-padding;
+
         &:first-child {
           margin-top: 8px;
         }

@@ -22,7 +22,15 @@ const actions = {
         try {
             const resp = await employeeRequests.getAllEmployees();
             console.log(resp);
-            commit('addEmployees', resp.data);
+            //commit('addEmployees', resp.data);
+            for(let i = 0; i < resp.data.length; i++) {
+                await new Promise((resolve) => {
+                    setTimeout( () => {
+                        commit('addEmployees', [resp.data[i]]);
+                        resolve();
+                    },300);
+                })
+            }
         } catch (e) {
             // some error handle
             console.log(e);

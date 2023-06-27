@@ -19,7 +19,7 @@ defineProps({
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  height: 70px;
+  flex: 0 0 70px;
   font-size: 14px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.10);
   border-radius: 10px;
@@ -34,8 +34,9 @@ defineProps({
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: stretch;
     overflow: hidden;
-    flex: 1 0;
+    flex: 1 1;
     padding: 0 10px 0 15px;
 
     .name {
