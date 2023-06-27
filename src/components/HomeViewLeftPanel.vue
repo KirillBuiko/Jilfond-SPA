@@ -6,19 +6,23 @@ import ComponentPreloader from "@/components/generals/ComponentPreloader.vue";
 import EmployeeListItem from "@/components/EmployeeListItem.vue";
 
 const inputText = ref("");
-const {state, commit} = useStore();
-const {employees} = state;
+const store = useStore();
+const {employees} = store.state;
 const timerDelay = 500;
 let timerID = -1;
 
 function loadAndSearch() {
-  commit('employees/setLoading', true);
-  setTimeout(() => commit('employees/setLoading', false), 5000);
+  store.commit('employees/setLoading', true);
+  setTimeout(() => store.commit('employees/setLoading', false), 5000);
 }
 
 function onUpdate() {
   if (timerID !== -1) clearTimeout(timerID);
   timerID = setTimeout(loadAndSearch, timerDelay);
+}
+
+function onItemClick(ID) {
+  store.commit('employees/selectEmployee', ID);
 }
 </script>
 
@@ -38,7 +42,9 @@ function onUpdate() {
         <EmployeeListItem class="search-result-item"
                           v-for="[key, value] in employees.employeesList"
                           :key="key"
-                          :info="value"/>
+                          :info="value"
+                          :is-selected="employees.selectedEmployeeID === key"
+                          @click="onItemClick(key)"/>
       </div>
     </div>
   </aside>
@@ -99,8 +105,8 @@ aside {
 
       .search-result-item {
         margin-bottom: 18px;
+        flex: 0 0 auto;
         width: $aside-width - $left-padding - $right-padding;
-
         &:first-child {
           margin-top: 8px;
         }
