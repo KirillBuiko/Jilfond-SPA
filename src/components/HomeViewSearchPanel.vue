@@ -44,7 +44,7 @@ function onItemClick(id) {
 </script>
 
 <template>
-  <aside>
+  <aside class="home-view-search-panel">
     <h1 class="search-label">Поиск сотрудников</h1>
     <ControlInput class="search-input"
                   input-type="text"
@@ -75,12 +75,12 @@ $left-padding: 20px;
 $right-padding: 31px;
 $aside-width: 290px;
 
-aside {
+.home-view-search-panel {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   flex: 0 0 $aside-width;
-  padding: 27px 0 20px 0;
+  padding: 27px 0 0 0;
   overflow: hidden;
 
   & > *:not(.search-result) {

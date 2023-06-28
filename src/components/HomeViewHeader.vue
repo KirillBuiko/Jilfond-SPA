@@ -3,14 +3,14 @@
 </script>
 
 <template>
-  <header>
+  <header class="home-view-header">
     <span class="logo-label">Жилфонд</span>
     <span class="user-label">Пользователь</span>
   </header>
 </template>
 
 <style scoped lang="scss">
-header {
+.home-view-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

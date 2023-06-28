@@ -5,7 +5,7 @@ import HomeViewMain from "@/components/HomeViewMain.vue";
 
 <template>
   <div class="home-view-wrapper">
-    <div class="home-view-content">
+    <div class="home-view">
       <HomeViewHeader/>
       <HomeViewMain/>
     </div>
@@ -22,7 +22,7 @@ import HomeViewMain from "@/components/HomeViewMain.vue";
   overflow: auto;
   padding: 16px 20px 59px 20px;
 
-  .home-view-content {
+  .home-view {
     display: flex;
     flex-direction: column;
     align-items: stretch;
