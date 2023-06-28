@@ -1,17 +1,17 @@
 <script setup>
-import HomeViewLeftPanel from "@/components/HomeViewLeftPanel.vue";
+import HomeViewSearchPanel from "@/components/HomeViewSearchPanel.vue";
 import HomeViewEmployeeProfile from "@/components/HomeViewEmployeeProfile.vue";
 </script>
 
 <template>
-  <main>
-    <HomeViewLeftPanel/>
+  <main class="home-view-main">
+    <HomeViewSearchPanel/>
     <HomeViewEmployeeProfile/>
   </main>
 </template>
 
 <style scoped lang="scss">
-main {
+.home-view-main {
   display: flex;
   flex-direction: row;
   align-items: stretch;

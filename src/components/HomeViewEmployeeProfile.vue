@@ -9,7 +9,7 @@ const selectedEmployee = computed(() => employees.employeesList.get(employees.se
 </script>
 
 <template>
-  <div class="employee-profile-wrapper">
+  <div class="home-view-employee-profile">
     <div class="placeholder" v-if="selectedEmployee === undefined">Выберите сотрудника, чтобы посмотреть его профиль
     </div>
     <div class="employee-profile" v-else>
@@ -41,7 +41,7 @@ const selectedEmployee = computed(() => employees.employeesList.get(employees.se
 </template>
 
 <style scoped lang="scss">
-.employee-profile-wrapper {
+.home-view-employee-profile {
   display: flex;
   flex-direction: row;
   flex: 1 0;
